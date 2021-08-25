@@ -1,0 +1,9 @@
+numpy
+pandas
+tensorflow>=2.0
+tensorflow-probability>=0.11
+arviz>=0.10
+anndata
+patsy
+toytree
+sccoda>=0.1.4
