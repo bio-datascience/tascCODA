@@ -485,7 +485,7 @@ class CAResult_tree(az.InferenceData):
 
         eff_max = np.max([np.abs(n.effect) for n in tree2.treenode.traverse()])
         if eff_max > 0:
-            ns = [np.abs(x) * 20 / eff_max for x in tree2.get_node_values("effect", 1, 1)]
+            ns = [(np.abs(x) * 20 / eff_max) + 5 if x != 0 else 0 for x in tree2.get_node_values("effect", 1, 1)]
         else:
             ns = 0
 

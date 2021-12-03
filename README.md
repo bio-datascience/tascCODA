@@ -1,7 +1,7 @@
 # tascCODA
 Tree-aggregated compositional analysis for high-throughput sequencing data
 
-tascCODA extends the [scCODA model](https://github.com/theislab/scCODA) (Büttner et al., 2020)
+tascCODA extends the [scCODA model](https://github.com/theislab/scCODA) (Büttner, Ostner et al., 2021)
 with a method to perform sparse, tree-aggregated modeling of high-throughput sequencing data.
 
 

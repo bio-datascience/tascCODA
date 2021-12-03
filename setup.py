@@ -18,14 +18,14 @@ URL = 'https://github.com/bio-datascience/tascCODA'
 EMAIL = 'johannes.ostner@helmholtz-muenchen.de'
 AUTHOR = 'Johannes Ostner, Christian L. Müller'
 REQUIRES_PYTHON = '>=3.8.0'
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
     "numpy",
     "pandas",
-    "tensorflow>=2.0",
-    "tensorflow-probability>=0.11",
+    "tensorflow==2.4",
+    "tensorflow-probability==0.12",
     "arviz>=0.10",
     "anndata",
     "patsy",
