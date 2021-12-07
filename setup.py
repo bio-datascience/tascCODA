@@ -24,7 +24,7 @@ VERSION = "0.1.1"
 REQUIRED = [
     "numpy",
     "pandas",
-    "tensorflow==2.4",
+    "tensorflow>=2.4,<2.6",
     "tensorflow-probability==0.12",
     "arviz>=0.10",
     "anndata",
