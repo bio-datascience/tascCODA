@@ -5,9 +5,9 @@ tascCODA extends the [scCODA model](https://github.com/theislab/scCODA) (Büttne
 with a method to perform sparse, tree-aggregated modeling of high-throughput sequencing data.
 
 
-The statistical methodology and benchmarking performance are described in:
+The statistical methodology and benchmarking performance are described here:
  
-TODO
+[Ostner, J., Carcy, S., and Müller, C. L. (2021). tascCODA: Bayesian Tree-Aggregated Analysis of Compositional Amplicon and Single-Cell Data. Front. Genet. 12, 766405.](https://www.frontiersin.org/articles/10.3389/fgene.2021.766405/full)
 
 Code for reproducing the analysis from the paper is available [here](https://github.com/bio-datascience/tascCODA_reproducibility).
 
