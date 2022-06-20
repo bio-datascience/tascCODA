@@ -471,7 +471,7 @@ class TreeModelSSLasso(mod.CompositionalModel):
                 'diverging': (pkr.inner_results.inner_results.inner_results.log_accept_ratio < -1000.),
                 "log_acc_ratio": pkr.inner_results.inner_results.inner_results.log_accept_ratio,
                 'is_accepted': pkr.inner_results.inner_results.inner_results.is_accepted,
-                'step_size': tf.exp(pkr.inner_results.log_averaging_step[0]),
+                'step_size': tf.exp(pkr.inner_results.log_averaging_step),
             }
 
         # HMC sampling

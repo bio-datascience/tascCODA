@@ -24,13 +24,13 @@ VERSION = "0.1.1"
 REQUIRED = [
     "numpy",
     "pandas",
-    "tensorflow>=2.4,<2.6",
-    "tensorflow-probability==0.12",
+    "tensorflow>=2.8",
+    "tensorflow-probability>=0.16",
     "arviz>=0.10",
     "anndata",
     "patsy",
     "toytree",
-    "sccoda>=0.1.4",
+    "sccoda>=0.1.7",
 ]
 
 # What packages are optional?
