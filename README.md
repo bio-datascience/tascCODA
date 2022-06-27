@@ -3,7 +3,9 @@ Tree-aggregated compositional analysis for high-throughput sequencing data
 
 tascCODA extends the [scCODA model](https://github.com/theislab/scCODA) (Büttner, Ostner et al., 2021)
 with a method to perform sparse, tree-aggregated modeling of high-throughput sequencing data.
-
+Hereby, tascCODA can infer credible changes on the features (i.e. cell types/ASVs/taxa) of a high-throughput sequencing dataset,
+as well as effects on subgroups of the set of features, which are defined by a tree structure, 
+for example a cell lineage hierarchy or a taxonomic tree.
 
 The statistical methodology and benchmarking performance are described here:
  
@@ -15,7 +17,7 @@ Code for reproducing the analysis from the paper is available [here](https://git
 
 Running the package requires a working Python environment (>=3.8).
 
-This package uses the `tensorflow` (`>=2.4`) and `tensorflow-probability` (`>=0.12`) packages.
+This package uses the `tensorflow` (`>=2.8`) and `tensorflow-probability` (`>=0.16`) packages.
 The GPU computation features of these packages have not been tested with tascCODA and are thus not recommended.
     
 **To install tascCODA via pip, call**:

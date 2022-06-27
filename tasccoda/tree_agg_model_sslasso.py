@@ -15,28 +15,28 @@ tfb = tfp.bijectors
 
 class TreeModelSSLasso(mod.CompositionalModel):
     """
-    Statistical model for single-cell differential composition analysis with specification of a reference cell type.
-    This is the standard scCODA model and recommenced for all uses.
+    Statistical model for tree-aggregated differential composition analysis (tascCODA, Ostner et al., 2021).
 
     The hierarchical formulation of the model for one sample is:
 
     .. math::
-         y|x &\\sim DirMult(a(x), \\bar{y}) \\\\
-         \\log(a(x)) &= \\alpha + x \\beta \\\\
-         \\alpha_k &\\sim N(0, 5) \\quad &\\forall k \\in [K] \\\\
-         \\beta_{d, \\hat{k}} &= 0 &\\forall d \\in [D]\\\\
-         \\beta_{d, k} &= \\tau_{d, k} \\tilde{\\beta}_{d, k} \\quad &\\forall d \\in [D], k \\in \\{[K] \\smallsetminus \\hat{k}\\} \\\\
-         \\tau_{d, k} &= \\frac{\\exp(t_{d, k})}{1+ \\exp(t_{d, k})} \\quad &\\forall d \\in [D], k \\in \\{[K] \\smallsetminus \\hat{k}\\} \\\\
-         \\frac{t_{d, k}}{50} &\\sim N(0, 1) \\quad &\\forall d \\in [D], k \\in \\{[K] \\smallsetminus \\hat{k}\\} \\\\
-         \\tilde{\\beta}_{d, k} &= (\\tilde{\\mu} + \\tilde{\\sigma}^2) \\cdot \\tilde{\\gamma}_{d, k} \\quad &\\forall d \\in [D], k \\in \\{[K] \\smallsetminus \\hat{k}\\} \\\\
-         \\tilde{\\mu} &\\sim N(0, 1) \\\\
-         \\tilde{\\sigma}^2 &\\sim HC(0, 1) \\\\
-         \\tilde{\\gamma}_{d, k} &\\sim N(0,1) \\quad &\\forall d \\in [D], k \\in \\{[K] \\smallsetminus \\hat{k}\\} \\\\
+         \\begin{align*}
+            Y_i &\\sim \\textrm{DirMult}(\\bar{Y}_i, \\textbf{a}(\\textbf{x})_i)\\\\
+            \\log(\\textbf{a}(X))_i &= \\alpha + X_{i, \\cdot} \\beta\\\\
+            \\alpha_j &\\sim \\mathcal{N}(0, 10) & \\forall j\\in[p]\\\\
+            \\beta &= \\hat{\\beta} A^T \\\\
+            \\hat{\\beta}_{l, k} &= 0 & \\forall k \\in \\hat{v}, l \\in [d]\\\\
+            \\hat{\\beta}_{l, k} &= \\theta \\tilde{\\beta}_{1, l, k} + (1- \\theta) \\tilde{\\beta}_{0, l, k} \\quad & \\forall k\\in\\{[v] \\smallsetminus \\hat{v}\\}, l \\in [d]\\\\
+            \\tilde{\\beta}_{m, l, k} &= \\sigma_{m, l, k} * b_{m, l, k} \\quad & \\forall k\\in\\{[v] \\smallsetminus \\hat{v}\\}, m \\in \\{0, 1\\}, l \\in [d]\\\\
+            \\sigma_{m, l, k} &\\sim \\textrm{Exp}(\\lambda_{m, l, k}^2/2) \\quad & \\forall k\\in\\{[v] \\smallsetminus \\hat{v}\\}, l \\in \\{0, 1\\}, l \\in [d]\\\\
+            b_{m, l, k} &\\sim N(0,1) \\quad & \\forall k\\in\\{[v] \\smallsetminus \\hat{v}\\}, l \\in \\{0, 1\\}, l \\in [d]\\\\
+            \\theta &\\sim \\textrm{Beta}(1, \\frac{1}{|\\{[v] \\smallsetminus \\hat{v}\\}|})
+        \\end{align*}
 
     with y being the cell counts and x the covariates.
 
-    For further information, see `scCODA: A Bayesian model for compositional single-cell data analysis`
-    (Büttner, Ostner et al., 2020)
+    For further information, see `tascCODA: Bayesian Tree-Aggregated Analysis of Compositional Amplicon and Single-Cell Data`
+    (Ostner et al., 2021)
 
     """
 

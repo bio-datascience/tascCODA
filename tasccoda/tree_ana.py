@@ -40,7 +40,6 @@ class CompositionalAnalysisTree:
             reference_cell_type: Union[str, int] = "automatic",
             reg: str = "scaled_3",
             pen_args: dict = {"lambda": 5},
-            model="old",
             automatic_reference_absence_threshold: float = 0.05,
             *args,
             **kwargs
@@ -134,23 +133,25 @@ class CompositionalAnalysisTree:
             node_leaves.reverse()
             pen_args["node_leaves"] = np.delete(np.array(node_leaves[:-1]), refs)
 
-        elif model == "new":
-            if "lambda_0" not in pen_args:
-                pen_args["lambda_0"] = 50
-            if "lambda_1" not in pen_args:
-                pen_args["lambda_1"] = 5
-            return ssl.TreeModelSSLasso(
-                covariate_matrix=np.array(covariate_matrix),
-                data_matrix=data_matrix,
-                cell_types=cell_types,
-                node_names=node_names,
-                covariate_names=covariate_names,
-                reference_nodes=refs,
-                formula=formula,
-                A=A,
-                T=T,
-                reg=reg,
-                pen_args=pen_args,
-                *args,
-                **kwargs
-            )
+        # Default spike-and-slab LASSO parameters
+        if "lambda_0" not in pen_args:
+            pen_args["lambda_0"] = 50
+        if "lambda_1" not in pen_args:
+            pen_args["lambda_1"] = 5
+
+        # Generate model object
+        return ssl.TreeModelSSLasso(
+            covariate_matrix=np.array(covariate_matrix),
+            data_matrix=data_matrix,
+            cell_types=cell_types,
+            node_names=node_names,
+            covariate_names=covariate_names,
+            reference_nodes=refs,
+            formula=formula,
+            A=A,
+            T=T,
+            reg=reg,
+            pen_args=pen_args,
+            *args,
+            **kwargs
+        )

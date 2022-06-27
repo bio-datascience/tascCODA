@@ -193,7 +193,7 @@ class CAResult_tree(az.InferenceData):
         node_df = node_df.loc[:, ["final_parameter", "median", hdis[0], hdis[1], "sd", "delta", "significant"]].copy()
         node_df = node_df.rename(columns=dict(zip(
             node_df.columns,
-            ["Final Parameter", "Median", hdis_new[0], hdis_new[1], "SD", "Delta", "Is significant"]
+            ["Final Parameter", "Median", hdis_new[0], hdis_new[1], "SD", "Delta", "Is credible"]
         )))
         return intercept_df, effect_df, node_df
 
@@ -359,7 +359,7 @@ class CAResult_tree(az.InferenceData):
         # Cut down DataFrames to relevant info
         alphas_print = intercept_df.loc[:, ["Final Parameter", "Expected Sample"]]
         betas_print = effect_df.loc[:, ["Effect", "Expected Sample", "log2-fold change"]]
-        node_print = node_df.loc[:, ["Final parameter", "Is significant"]]
+        node_print = node_df.loc[:, ["Final Parameter", "Is credible"]]
 
         # Print everything neatly
         print("Compositional Analysis summary:")
@@ -477,9 +477,9 @@ class CAResult_tree(az.InferenceData):
         # add node colors
         for n in tree2.treenode.traverse():
             if np.sign(n.effect) == 1:
-                n.add_feature("color", "black")
+                n.add_feature("color", "blue")
             elif np.sign(n.effect) == -1:
-                n.add_feature("color", "white")
+                n.add_feature("color", "red")
             else:
                 n.add_feature("color", "cyan")
 
