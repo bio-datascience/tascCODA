@@ -23,7 +23,7 @@ matplotlib.use('agg')
 HERE = Path(__file__).parent
 sys.path[:0] = [str(HERE.parent), str(HERE / '_ext')]
 
-import sccoda
+import tasccoda
 on_rtd = os.environ.get('READTHEDOCS') == 'True'
 
 needs_sphinx = "2.0"
@@ -49,7 +49,7 @@ title = 'tascCODA: Bayesian Tree-Aggregated Analysis of Compositional Amplicon a
 author = 'Johannes Ostner, Salomé Carcy, Christian L. Müller'
 copyright = f"{datetime.datetime.now():%Y}, {author}"
 
-version = sccoda.__version__.replace(".dirty", "")
+version = tasccoda.__version__.replace(".dirty", "")
 release = version
 
 # -- General configuration ---------------------------------------------------
