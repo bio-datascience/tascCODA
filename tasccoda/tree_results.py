@@ -3,7 +3,7 @@ Results class that summarizes the results of tascCODA and calculates test statis
 This class extends the ´´InferenceData`` class in the ``arviz`` package and can use all plotting and diacgnostic
 functionalities of it.
 
-Additionally, this class can produce nicely readable outputs for scCODA.
+Additionally, this class can produce nicely readable outputs for tascCODA.
 
 :authors: Johannes Ostner
 """
@@ -121,7 +121,7 @@ class CAResult_tree(az.InferenceData):
 
         Returns
         -------
-        Intercept and effect DataFrames
+        Intercept, effect and node effect DataFrames
 
         intercept_df -- pandas df
             Summary of intercept parameters. Contains one row per cell type.
@@ -133,15 +133,27 @@ class CAResult_tree(az.InferenceData):
             - Expected sample: Expected cell counts for a sample with no present covariates. See the tutorial for more explanation
 
         effect_df -- pandas df
-            Summary of effect (slope) parameters. Contains one row per covariate/cell type combination.
+            Summary of effect (slope) parameters on the data features (cell types or OTUs). Contains one row per covariate/cell type combination.
 
             Columns:
-            - Final Parameter: Final effect model parameter. If this parameter is 0, the effect is not significant, else it is.
+            - Effect: Final effect model parameter. If this parameter is 0, the effect is not significant, else it is.
+            - Median: Median of parameter over MCMC chain
             - HDI X%: Upper and lower boundaries of confidence interval (width specified via hdi_prob=)
             - SD: Standard deviation of MCMC samples
             - Expected sample: Expected cell counts for a sample with only the current covariate set to 1. See the tutorial for more explanation
             - log2-fold change: Log2-fold change between expected cell counts with no covariates and with only the current covariate
             - Inclusion probability: Share of MCMC samples, for which this effect was not set to 0 by the spike-and-slab prior.
+
+        node_df -- pandas df
+            Summary of effect (slope) parameters on the tree nodes (features or groups of features). Contains one row per covariate/cell type combination.
+
+            Columns:
+            - Final Parameter: Final effect model parameter. If this parameter is 0, the effect is not significant, else it is.
+            - Median: Median of parameter over MCMC chain
+            - HDI X%: Upper and lower boundaries of confidence interval (width specified via hdi_prob=)
+            - SD: Standard deviation of MCMC samples
+            - Delta: Decision boundary value - threshold of practical significance
+            - Is credible: Boolean indicator whether effect is credible
         """
 
         # initialize summary df from arviz and separate into intercepts and effects.
@@ -204,25 +216,24 @@ class CAResult_tree(az.InferenceData):
             node_df: pd.DataFrame,
     ) -> pd.DataFrame:
         """
-        Evaluation of MCMC results for effect parameters. This function is only used within self.summary_prepare.
-        This function also calculates the posterior inclusion probability for each effect and decides whether effects are significant.
+        Evaluation of MCMC results for feature-level effect parameters. This function is only used within self.summary_prepare.
 
         Parameters
         ----------
         intercept_df
             Intercept summary, see ``self.summary_prepare``
         effect_df
-            Effect summary, see ``self.summary_prepare``
+            Feature-level effect summary, see ``self.summary_prepare``
+        node_df
+            Node-level effect summary, see ``self.summary_prepare``
 
         Returns
         -------
         effect DataFrame
 
         effect_df
-            DataFrame with inclusion probability, final parameters, expected sample
+            DataFrame with final parameters, expected sample, log-fold change
         """
-        beta_inc_prob = []
-        beta_nonzero_mean = []
 
         # Get effects of nodes on leaves
         D = len(effect_df.index.levels[0])
@@ -287,8 +298,23 @@ class CAResult_tree(az.InferenceData):
     def complete_node_df(
             self,
             node_df: pd.DataFrame,
-            target_fdr: float = 0.05,
     ) -> pd.DataFrame:
+        """
+        Evaluation of MCMC results for node-level effect parameters. This function is only used within self.summary_prepare.
+        This function determines whether node-level effects are credible or not
+
+        Parameters
+        ----------
+        node_df
+            Node-level effect summary, see ``self.summary_prepare``
+
+        Returns
+        -------
+        node-level effect DataFrame
+
+        node_df
+            DataFrame with inclusion threshold, final parameters, significance indicator
+        """
 
         # calculate inclusion threshold
         theta = np.median(self.posterior["theta"].values)
@@ -324,7 +350,7 @@ class CAResult_tree(az.InferenceData):
             **kwargs
     ):
         """
-        Printing method for scCODA's summary.
+        Printing method for tascCODA's summary.
 
         Usage: ``result.summary()``
 
@@ -438,6 +464,23 @@ class CAResult_tree(az.InferenceData):
         print(node_df)
 
     def get_significant_results(self, *args, **kwargs):
+        """
+        Returrns credible (nonzero effect) node-level names and feature-level tree indices
+
+        Parameters
+        ----------
+        args
+            Passed to self.summary_prepare
+        kwargs
+            Passed to self.summary_prepare
+
+        Returns
+        -------
+        dictionary with node- and effect-level significances
+
+        dict
+            Dictionary with "Nodes": Names of credible nodes; "Cell types": indices of features that are children of nodes with credible effects
+        """
 
         if args or kwargs:
             intercept_df, effect_df, node_df = self.summary_prepare(*args, **kwargs)
@@ -462,11 +505,30 @@ class CAResult_tree(az.InferenceData):
             **kwargs
     ):
 
+        """
+        Plot a tree with colored circles on the nodes indicating significant effects. See tutorial for an example.
+
+        Parameters
+        ----------
+        tree
+            toytree tree object that defines the hierarchical structure. Should always be data.uns["phylo_tree"] from the dataset used to generate the results object
+        args
+            Passed to toytree.draw
+        kwargs
+            Passed to toytree.draw
+
+        Returns
+        -------
+        Plots a tree
+        """
+
+        # Collapse tree singularities
         tree2 = util.collapse_singularities(tree)
 
         effs = self.node_df.copy()
         effs.index = effs.index.get_level_values("Node")
 
+        # Add effect values
         for n in tree2.treenode.traverse():
             if n.name in effs.index:
                 e = effs.loc[n.name, "Final Parameter"]
@@ -483,12 +545,14 @@ class CAResult_tree(az.InferenceData):
             else:
                 n.add_feature("color", "cyan")
 
+        # Scale effect values to get nice node sizes
         eff_max = np.max([np.abs(n.effect) for n in tree2.treenode.traverse()])
         if eff_max > 0:
             ns = [(np.abs(x) * 20 / eff_max) + 5 if x != 0 else 0 for x in tree2.get_node_values("effect", 1, 1)]
         else:
             ns = 0
 
+        # Draw tree
         tree2.draw(
             node_sizes=ns,
             node_colors=tree2.get_node_values("color", 1, 1),
