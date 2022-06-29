@@ -1,13 +1,35 @@
+"""
+Utility functions to help with handling tree objects in tascCODA
+
+:authors: Johannes Ostner
+"""
 import numpy as np
 import toytree as tt
 import pandas as pd
 
-from typing import Tuple
+from typing import Tuple, List
 
 
 def get_A(
         tree: tt.tree,
 ) -> Tuple[np.ndarray, int]:
+    """
+    Calculate ancestor matrix from a toytree tree
+
+    Parameters
+    ----------
+    tree
+        A toytree tree object
+
+    Returns
+    -------
+    Ancestor matrix and number of nodes without root node
+
+    A
+        Ancestor matrix (numpy array)
+    T
+        number of nodes in the tree, excluding the root node
+    """
     # Builds ancestor matrix
 
     n_tips = tree.ntips
@@ -37,7 +59,21 @@ def get_A(
 def collapse_singularities(
         tree: tt.tree
 ) -> tt.tree:
-    # Collapses nodes in a tree with only one child
+    """
+    Collapses (deletes) nodes in a toytree tree that are singularities (have only one child).
+
+    Parameters
+    ----------
+    tree
+        A toytree tree object
+
+    Returns
+    -------
+    A toytree tree without singularities
+
+    tree_new
+        A toytree tree
+    """
 
     A, _ = get_A(tree)
     A_T = A.T
@@ -69,6 +105,10 @@ def collapse_singularities(
 
 
 def traverse(df_, a, i, innerl):
+    """
+    Helper function for df2newick
+    Adapted from https://stackoverflow.com/questions/15343338/how-to-convert-a-data-frame-to-tree-structure-object-such-as-dendrogram
+    """
     if i+1 < df_.shape[1]:
         a_inner = pd.unique(df_.loc[np.where(df_.iloc[:, i] == a)].iloc[:, i+1])
 
@@ -86,7 +126,31 @@ def traverse(df_, a, i, innerl):
     return out
 
 
-def df2newick(df, levels, inner_label=True):
+def df2newick(
+        df: pd.DataFrame,
+        levels: List[str],
+        inner_label: bool = True
+) -> str:
+    """
+    Converts a pandas DataFrame with hierarchical information into a newick string.
+    Adapted from https://stackoverflow.com/questions/15343338/how-to-convert-a-data-frame-to-tree-structure-object-such-as-dendrogram
+
+    Parameters
+    ----------
+    df
+        Pandas DataFrame that has one row for each leaf of the tree and columns that indicate a hierarchical ordering. See the tascCODA tutorial for an example.
+    levels
+        list that indicates how the columns in df are ordered as tree levels. Begins with the root level, ends with the leaf level
+    inner_label
+        Indicator whether labels for inner nodes should be included in the newick string
+
+    Returns
+    -------
+    Newick string describing the tree structure from df
+
+    newick
+        A newick string
+    """
     df_tax = df.loc[:, [x for x in levels if x in df.columns]]
 
     alevel = pd.unique(df_tax.iloc[:, 0])
