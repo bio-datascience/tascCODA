@@ -1,4 +1,4 @@
-:github_url: https://github.com/bio-datascience/tascCODA/tree/main/tasccoda/tree_agg_model_sslasso.py#L235-L308
+:github_url: https://github.com/bio-datascience/tascCODA/tree/main/tasccoda/tree_agg_model_sslasso.py#L257-L330
 
 tasccoda.tree\_agg\_model\_sslasso.TreeModelSSLasso.get\_y\_hat
 ===============================================================

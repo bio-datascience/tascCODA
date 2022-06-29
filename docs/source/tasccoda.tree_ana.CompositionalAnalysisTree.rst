@@ -1,4 +1,4 @@
-﻿:github_url: https://github.com/bio-datascience/tascCODA/tree/main/tasccoda/tree_ana.py#L17-L157
+﻿:github_url: https://github.com/bio-datascience/tascCODA/tree/main/tasccoda/tree_ana.py#L17-L172
 
 tasccoda.tree\_ana.CompositionalAnalysisTree
 ============================================

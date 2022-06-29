@@ -1,6 +1,6 @@
 
 Welcome to tascCODA's documentation!
-=============================================
+====================================
 
 .. image:: ../../.github/Figures/tascCODA_Fig1.png
    :width: 500px
@@ -17,17 +17,17 @@ Please also check out the `tutorials <https://github.com/bio-datascience/tascCOD
 that explain the most important functionalities.
 
 Motivation
-^^^^^^^^^^^^
+^^^^^^^^^^
 
 When analyzing biological processes via high-throughput sequencing (HTS) experiments, such as single-cell RNA sequencing or 16S rRNA sequencing,
 it is often of interest to assess how cell populations change under one or more conditions.
 This task, however, is non-trivial, as there are several limitations that have to be addressed:
 
-- scRNA-seq population data is compositional. This must be considered to avoid an inflation of false-positive results.
+- HTS population data is compositional. This must be considered to avoid an inflation of false-positive results.
 - Most datasets consist only of few samples, making frequentist tests inaccurate.
 - A condition usually only effects a fraction of features. Therefore, sparse effects are preferable.
 
-The `scCODA <https://github.com/theislab/scCODA>`_ model `(Büttner, Ostner et al., 2021) <https://www.nature.com/articles/s41467-021-27150-6>`_ tackled these limitations in a fully Bayesian model, outperforming other
+The `scCODA <https://github.com/theislab/scCODA>`__ model `(Büttner, Ostner et al., 2021) <https://www.nature.com/articles/s41467-021-27150-6>`_ tackled these limitations in a fully Bayesian model, outperforming other
 compositional and non-compositional methods.
 
 In addition, HTS datasets are often ordered hierarchically by a tree structure, such as a cell lineage or taxonomic tree.
@@ -37,7 +37,7 @@ For example, multiple types of T- and B-cells were found to be decreased in the 
 tascCODA is an extension of scCODA that is able to infer these group-wise changes automatically in a dynamic fashion.
 It creates a balance between the increased simplicity of aggregated effects with the lost accuracy of a less sparse model, that can be adjusted by the user as desired.
 
-Note: Due to its similarity and dependency on scCODA, this documentation often links to the documentation of `scCODA <https://sccoda.readthedocs.io/en/latest>`_, wherever the two packages share functionality or API.
+Note: Due to its similarity and dependency on scCODA, this documentation often links to the documentation of `scCODA <https://sccoda.readthedocs.io/en/latest>`__, wherever the two packages share functionality or API.
 
 
 .. toctree::
@@ -64,7 +64,7 @@ Ostner *et al.* (2021), tascCODA: Bayesian Tree-Aggregated Analysis of Compositi
 |dim|
 
 Indices and tables
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
 
 * :ref:`genindex`
 * :ref:`modindex`

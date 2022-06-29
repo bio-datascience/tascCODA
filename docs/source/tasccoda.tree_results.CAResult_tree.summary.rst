@@ -1,4 +1,4 @@
-:github_url: https://github.com/bio-datascience/tascCODA/tree/main/tasccoda/tree_results.py#L321-L380
+:github_url: https://github.com/bio-datascience/tascCODA/tree/main/tasccoda/tree_results.py#L347-L406
 
 tasccoda.tree\_results.CAResult\_tree.summary
 =============================================

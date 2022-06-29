@@ -106,7 +106,7 @@ nbsphinx_prolog = r"""
       <a href="https://colab.research.google.com/{{ docname|e }}" target="_parent">
       <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
       <a href="https://nbviewer.jupyter.org/{{ docname|e }}" target="_parent">
-      <img src="https://github.com/theislab/scCODA/raw/master/docs/source/_static/nbviewer_badge.svg" alt="Open In nbviewer"/></a>
+      <img src="https://github.com/bio-datascience/tascCODA/raw/main/docs/source/_static/nbviewer_badge.svg" alt="Open In nbviewer"/></a>
     </div>
 """
 
