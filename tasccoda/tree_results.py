@@ -11,6 +11,7 @@ import numpy as np
 import arviz as az
 import pandas as pd
 import tasccoda.tree_utils as util
+import toytree as tt
 
 from typing import Optional, Tuple, Collection, Union, List
 
@@ -489,9 +490,8 @@ class CAResult_tree(az.InferenceData):
             effect_df = self.effect_df
             node_df = self.node_df
 
-        sig_nodes = node_df[node_df["Final Parameter"] != 0].index.get_level_values(1).tolist()
-        res_otus = np.where(np.matmul(self.model_specs["A"], self.node_df["Final Parameter"]) != 0)[0].tolist()
-        res_otus = [str(x) for x in res_otus]
+        sig_nodes = node_df[node_df["Final Parameter"] != 0].index.tolist()
+        res_otus = effect_df[effect_df["Effect"] != 0].index.tolist()
 
         return {
             "Nodes": sig_nodes,
@@ -500,7 +500,8 @@ class CAResult_tree(az.InferenceData):
 
     def draw_tree_effects(
             self,
-            tree,
+            tree: tt.tree,
+            covariate: str,
             *args,
             **kwargs
     ):
@@ -512,6 +513,8 @@ class CAResult_tree(az.InferenceData):
         ----------
         tree
             toytree tree object that defines the hierarchical structure. Should always be data.uns["phylo_tree"] from the dataset used to generate the results object
+        covariate
+            The covariate, whose effects should be plotted
         args
             Passed to toytree.draw
         kwargs
@@ -525,7 +528,7 @@ class CAResult_tree(az.InferenceData):
         # Collapse tree singularities
         tree2 = util.collapse_singularities(tree)
 
-        effs = self.node_df.copy()
+        effs = self.node_df.loc[(covariate,),].copy()
         effs.index = effs.index.get_level_values("Node")
 
         # Add effect values
