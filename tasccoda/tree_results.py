@@ -466,7 +466,7 @@ class CAResult_tree(az.InferenceData):
 
     def get_significant_results(self, *args, **kwargs):
         """
-        Returrns credible (nonzero effect) node-level names and feature-level tree indices
+        Returns credible (nonzero effect) node-level names and feature-level tree indices
 
         Parameters
         ----------

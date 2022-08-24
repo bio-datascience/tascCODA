@@ -18,7 +18,7 @@ URL = 'https://github.com/bio-datascience/tascCODA'
 EMAIL = 'johannes.ostner@helmholtz-muenchen.de'
 AUTHOR = 'Johannes Ostner, Christian L. Müller'
 REQUIRES_PYTHON = '>=3.8.0'
-VERSION = '0.1.2'
+VERSION = '0.1.3'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
